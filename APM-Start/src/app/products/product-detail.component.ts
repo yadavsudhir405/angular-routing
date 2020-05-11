@@ -1,30 +1,24 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 
-import { Product } from './product';
-import { ProductService } from './product.service';
+import {Product, ProductResolved} from './product';
+import {ProductService} from './product.service';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
-export class ProductDetailComponent implements OnInit{
+export class ProductDetailComponent {
   pageTitle = 'Product Detail';
   product: Product;
   errorMessage: string;
 
-  constructor(private productService: ProductService, private readonly route: ActivatedRoute) { }
+  constructor(private productService: ProductService,
+              private readonly route: ActivatedRoute) {
 
-  ngOnInit(): void {
-    const productId = +this.route.snapshot.paramMap.get('id');
-    this.getProduct(productId);
-  }
-
-  getProduct(id: number) {
-    this.productService.getProduct(id).subscribe({
-      next: product => this.onProductRetrieved(product),
-      error: err => this.errorMessage = err
-    });
+    const resolvedProduct: ProductResolved = this.route.snapshot.data['resolvedProduct'];
+    this.onProductRetrieved(resolvedProduct.product);
+    this.errorMessage = resolvedProduct.error;
   }
 
   onProductRetrieved(product: Product): void {
