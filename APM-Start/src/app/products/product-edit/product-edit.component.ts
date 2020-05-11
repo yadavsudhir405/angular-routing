@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 
 import { MessageService } from '../../messages/message.service';
 
-import { Product } from '../product';
+import {Product, ProductResolved} from '../product';
 import { ProductService } from '../product.service';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -10,7 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
   templateUrl: './product-edit.component.html',
   styleUrls: ['./product-edit.component.css']
 })
-export class ProductEditComponent implements OnInit {
+export class ProductEditComponent {
   pageTitle = 'Product Edit';
   errorMessage: string;
 
@@ -19,18 +19,10 @@ export class ProductEditComponent implements OnInit {
   constructor(private productService: ProductService,
               private messageService: MessageService,
               private router: Router,
-              private route: ActivatedRoute) { }
-
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(paramMap => {
-      this.getProduct(+paramMap.get('id'));
-    });
-  }
-
-  getProduct(id: number): void {
-    this.productService.getProduct(id).subscribe({
-      next: product => this.onProductRetrieved(product),
-      error: err => this.errorMessage = err
+              private route: ActivatedRoute) {
+    this.route.data.subscribe((data) => {
+      this.onProductRetrieved(data['resolvedProduct'].product);
+      this.errorMessage = data['resolvedProduct'].error;
     });
   }
 
