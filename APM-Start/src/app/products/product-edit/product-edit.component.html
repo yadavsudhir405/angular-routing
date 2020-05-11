@@ -13,6 +13,31 @@
         Search Tags
       </a>
       <router-outlet></router-outlet>
+      <div class="form-group row mb-2">
+        <div class="col-md-4">
+          <button class="btn btn-primary mr-3"
+                  style="width:80px"
+                  type="button"
+                  title="Save your entered data"
+                  (click)="saveProduct()">
+            Save
+          </button>
+          <button class="btn btn-outline-secondary mr-3"
+                  style="width:80px"
+                  type="button"
+                  [routerLink]="['/products']"
+                  title="Cancel your edits">
+            Cancel
+          </button>
+          <button class="btn btn-outline-warning"
+                  style="width:80px"
+                  type="button"
+                  title="Delete this product"
+                  (click)="deleteProduct()">
+            Delete
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
