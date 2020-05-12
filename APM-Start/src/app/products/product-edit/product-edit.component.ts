@@ -16,6 +16,8 @@ export class ProductEditComponent {
 
   product: Product;
 
+  dataIsValid: {[key: string]: boolean} = {};
+
   constructor(private productService: ProductService,
               private messageService: MessageService,
               private router: Router,
@@ -54,8 +56,36 @@ export class ProductEditComponent {
     }
   }
 
+  isValid(tab?: string): boolean {
+    this.validate();
+    if (tab) {
+      return this.dataIsValid[tab];
+    }
+
+    return (this.dataIsValid) &&
+      (Object.keys(this.dataIsValid).every(key => this.dataIsValid[key] === true));
+  }
+
+  validate(): void {
+    this.dataIsValid = {};
+    if (this.product.productName &&
+      (this.product.productName.length >= 3) &&
+      this.product.productCode) {
+      this.dataIsValid['info'] = true;
+    } else {
+      this.dataIsValid['info'] = false;
+    }
+
+    if (this.product.category &&
+      this.product.category.length >= 3) {
+      this.dataIsValid['tags'] = true;
+    } else {
+      this.dataIsValid['tags'] = false;
+    }
+  }
+
   saveProduct(): void {
-    if (true === true) {
+    if (this.isValid()) {
       if (this.product.id === 0) {
         this.productService.createProduct(this.product).subscribe({
           next: () => this.onSaveComplete(`The new ${this.product.productName} was saved`),
