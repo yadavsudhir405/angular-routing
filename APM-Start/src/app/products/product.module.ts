@@ -9,6 +9,7 @@ import {RouterModule} from '@angular/router';
 import {ProductResolver} from './product-resolver.service';
 import {ProductEditInfoComponent} from './product-edit/product-edit-info.component';
 import {ProductEditTagsComponent} from './product-edit/product-edit-tags.component';
+import {ProductsResolver} from './products-resolver.service';
 
 const ROUTES = [
   {
@@ -16,7 +17,8 @@ const ROUTES = [
     children: [
       {
         path: '',
-        component: ProductListComponent
+        component: ProductListComponent,
+        resolve: {resolvedProducts: ProductsResolver}
       },
       {
         path: ':id',

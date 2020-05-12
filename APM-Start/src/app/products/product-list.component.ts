@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 
-import { Product } from './product';
-import { ProductService } from './product.service';
+import {Product, ProductsResolved} from './product';
+import {ProductService} from './product.service';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent {
   pageTitle = 'Product List';
   imageWidth = 50;
   imageMargin = 2;
@@ -27,18 +27,13 @@ export class ProductListComponent implements OnInit {
   filteredProducts: Product[] = [];
   products: Product[] = [];
 
-  constructor(private productService: ProductService, private readonly route: ActivatedRoute) { }
-
-  ngOnInit(): void {
-    this.productService.getProducts().subscribe({
-      next: products => {
-        this.products = products;
-        this.filteredProducts = this.performFilter(this.listFilter);
-      },
-      error: err => this.errorMessage = err
-    });
+  constructor(private productService: ProductService, private readonly route: ActivatedRoute) {
     this._listFilter = this.route.snapshot.queryParamMap.get('filterBy') || '';
     this.showImage = this.route.snapshot.queryParamMap.get('showImage') === 'true';
+    const resolvedProduct: ProductsResolved = this.route.snapshot.data['resolvedProducts'];
+    this.products = resolvedProduct.products;
+    this.errorMessage = resolvedProduct.error;
+    this.filteredProducts = this.performFilter(this.listFilter);
   }
 
   performFilter(filterBy: string): Product[] {
