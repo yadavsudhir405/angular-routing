@@ -4,6 +4,7 @@ import { AuthService } from './user/auth.service';
 import {Router, Event, NavigationStart, NavigationEnd, NavigationCancel, NavigationError
 } from '@angular/router';
 import {slideInAnimation} from './app.animation';
+import {MessageService} from './messages/message.service';
 
 @Component({
   selector: 'pm-root',
@@ -15,7 +16,9 @@ export class AppComponent {
   pageTitle = 'Acme Product Management';
   isLoading = false;
 
-  constructor(private authService: AuthService, private readonly router: Router) {
+  constructor(private authService: AuthService,
+              private readonly messageService: MessageService,
+              private readonly router: Router) {
     this.router.events.subscribe((event: Event) => {
       this.handleRouterEvent(event);
     });
@@ -47,5 +50,18 @@ export class AppComponent {
   logOut(): void {
     this.authService.logout();
     this.router.navigateByUrl('/welcome');
+  }
+
+  showMessages() {
+    this.router.navigate([{outlets: {popup: ['message']}}]);
+    this.messageService.isDisplayed = true;
+  }
+
+  hideMessage() {
+    this.messageService.isDisplayed = false;
+  }
+
+  isMessageDisplayed() {
+    return this.messageService.isDisplayed;
   }
 }
