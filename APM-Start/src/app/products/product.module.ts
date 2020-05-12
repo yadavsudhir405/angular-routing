@@ -13,8 +13,11 @@ import {ProductEditTagsComponent} from './product-edit/product-edit-tags.compone
 const ROUTES = [
   {
     path: 'products',
-    component: ProductListComponent,
     children: [
+      {
+        path: '',
+        component: ProductListComponent
+      },
       {
         path: ':id',
         component: ProductDetailComponent,
