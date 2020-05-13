@@ -56,11 +56,11 @@ export class ProductEditComponent {
   deleteProduct(): void {
     if (this.product.id === 0) {
       // Don't delete, it was never saved.
-      this.onSaveComplete(null, `${this.product.productName} was deleted`);
+      this.onSaveComplete( `${this.product.productName} was deleted`);
     } else {
       if (confirm(`Really delete the product: ${this.product.productName}?`)) {
         this.productService.deleteProduct(this.product.id).subscribe({
-          next: () => this.onSaveComplete(null, `${this.product.productName} was deleted`),
+          next: () => this.onSaveComplete( `${this.product.productName} was deleted`),
           error: err => this.errorMessage = err
         });
       }
@@ -99,14 +99,14 @@ export class ProductEditComponent {
     if (this.isValid()) {
       if (this.product.id === 0) {
         this.productService.createProduct(this.product).subscribe({
-          next: (p: Product) => {
-            this.onSaveComplete(p, `The new ${this.product.productName} was saved`);
+          next: () => {
+            this.onSaveComplete(`The new ${this.product.productName} was saved`);
           },
           error: err => this.errorMessage = err
         });
       } else {
         this.productService.updateProduct(this.product).subscribe({
-          next: (p: Product) => this.onSaveComplete(p, `The updated ${this.product.productName} was saved`),
+          next: () => this.onSaveComplete(`The updated ${this.product.productName} was saved`),
           error: err => this.errorMessage = err
         });
       }
@@ -115,20 +115,18 @@ export class ProductEditComponent {
     }
   }
 
-  onSaveComplete(savedProduct: Product, message?: string): void {
-    if (savedProduct) {
-      this.currentProduct = savedProduct;
-      this.originalProduct = {...savedProduct};
-    } else {
-      this.currentProduct = null;
-      this.originalProduct = null;
-      this.dataIsValid = {};
-    }
+  reset(): void {
+    this.currentProduct = null;
+    this.originalProduct = null;
+    this.dataIsValid = {};
+  }
 
+
+  onSaveComplete(message?: string): void {
     if (message) {
       this.messageService.addMessage(message);
     }
-
+    this.reset();
     this.router.navigate(['/products']);
 
     // Navigate back to the product list
