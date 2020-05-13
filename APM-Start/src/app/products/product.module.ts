@@ -11,6 +11,7 @@ import {ProductEditInfoComponent} from './product-edit/product-edit-info.compone
 import {ProductEditTagsComponent} from './product-edit/product-edit-tags.component';
 import {ProductsResolver} from './products-resolver.service';
 import {AuthGuard} from '../user/auth-guard.service';
+import {ProductEditGuard} from './product-edit/product-edit-guard.service';
 
 const ROUTES = [
   {
@@ -30,6 +31,7 @@ const ROUTES = [
       {
         path: ':id/edit',
         component: ProductEditComponent,
+        canDeactivate: [ProductEditGuard],
         resolve: {resolvedProduct: ProductResolver},
         children: [
           {path: '', redirectTo: 'info', pathMatch: 'full'},
